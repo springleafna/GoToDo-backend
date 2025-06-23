@@ -91,6 +91,29 @@ public class TaskServiceImpl implements TaskService {
         return Result.success();
     }
 
+    @Override
+    public Result<Void> completedTask(Long taskId, Boolean status) {
+        if (taskId == null) {
+            return Result.error("任务ID不能为空");
+        }
+        if (status == null) {
+            return Result.error("完成状态不能为空");
+        }
+        // 获取任务状态（true->1   false->0）
+        Integer completed = status ? CompletedStatusEnum.COMPLETED.getCode() : CompletedStatusEnum.NOT_COMPLETED.getCode();
+        Task task = taskMapper.getTaskByTaskId(taskId);
+        if (task == null) {
+            return Result.error("任务不存在");
+        }
+        if (task.getCompleted().equals(completed)) {
+            return Result.success();
+        }
+        if (taskMapper.updateTaskCompleted(taskId, completed) == 0) {
+            return Result.error("更新任务状态失败");
+        }
+        return Result.success();
+    }
+
     /**
      * 单个 Task 转换为 TaskVO
      */

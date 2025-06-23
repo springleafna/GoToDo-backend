@@ -20,8 +20,8 @@
         VALUES (#{title}, #{remark}, #{endTime}, #{reminderTime}, #{completed}, #{priority}, #{deleted})
     </insert>
 
-    <update id="updateTaskStatus">
-        UPDATE tb_task SET completed = #{status} WHERE task_id = #{taskId} AND deleted = 0;
+    <update id="updateTaskCompleted">
+        UPDATE tb_task SET completed = #{completed} WHERE task_id = #{taskId} AND deleted = 0;
     </update>
 
     <update id="updateTaskInfo">

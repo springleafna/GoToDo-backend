@@ -26,7 +26,7 @@ public interface TaskMapper {
     /**
      * 更新任务状态（完成/未完成）
      */
-    int updateTaskStatus(@Param("taskId") Long taskId, @Param("status") Integer status);
+    int updateTaskCompleted(@Param("taskId") Long taskId, @Param("completed") Integer completed);
 
     /**
      * 更新任务基本信息（标题、备注、时间等）

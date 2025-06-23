@@ -27,4 +27,12 @@ public interface TaskService {
      * @return Result<Void>
      */
     Result<Void> deleteTask(Long taskId);
+
+    /**
+     * 完成/未完成 任务
+     * @param taskId 任务ID
+     * @param status 完成状态(false:未完成 true:已完成)
+     * @return Result<Void>
+     */
+    Result<Void> completedTask(Long taskId, Boolean status);
 }
