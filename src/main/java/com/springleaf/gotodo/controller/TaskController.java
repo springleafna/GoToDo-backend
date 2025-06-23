@@ -2,6 +2,7 @@ package com.springleaf.gotodo.controller;
 
 import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.model.dto.TaskSaveDTO;
+import com.springleaf.gotodo.model.dto.TaskUpdateDTO;
 import com.springleaf.gotodo.model.vo.TaskVO;
 import com.springleaf.gotodo.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,13 @@ public class TaskController {
     @PutMapping("/completed")
     public Result<Void> completedTask(@RequestParam Long taskId, @RequestParam Boolean status) {
         return taskService.completedTask(taskId, status);
+    }
+
+    /**
+     * 更新任务基本信息（标题、备注、时间等）
+     */
+    @PutMapping("/update")
+    public Result<TaskVO> updateTaskInfo(@RequestBody TaskUpdateDTO taskUpdateDTO) {
+        return taskService.updateTaskInfo(taskUpdateDTO);
     }
 }

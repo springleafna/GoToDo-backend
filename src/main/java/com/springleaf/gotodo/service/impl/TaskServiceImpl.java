@@ -8,6 +8,7 @@ import com.springleaf.gotodo.mapper.CategoryMapper;
 import com.springleaf.gotodo.mapper.CategoryTaskMapper;
 import com.springleaf.gotodo.mapper.TaskMapper;
 import com.springleaf.gotodo.model.dto.TaskSaveDTO;
+import com.springleaf.gotodo.model.dto.TaskUpdateDTO;
 import com.springleaf.gotodo.model.entity.Task;
 import com.springleaf.gotodo.model.vo.TaskVO;
 import com.springleaf.gotodo.service.TaskService;
@@ -50,7 +51,7 @@ public class TaskServiceImpl implements TaskService {
         task.setDeleted(DeletedStatusEnum.NORMAL.getCode());
         if (taskMapper.saveTask(task) == 0) {
             return Result.error("保存任务失败");
-        };
+        }
         // 保存任务-任务分类
         if (categoryTaskMapper.saveCategoryTask(taskSaveDTO.getCategoryId(), task.getTaskId()) == 0) {
             return Result.error("保存任务失败");
@@ -112,6 +113,32 @@ public class TaskServiceImpl implements TaskService {
             return Result.error("更新任务状态失败");
         }
         return Result.success();
+    }
+
+    @Override
+    public Result<TaskVO> updateTaskInfo(TaskUpdateDTO taskUpdateDTO) {
+        if (taskUpdateDTO == null) {
+            return Result.error("任务更新信息不能为空");
+        }
+        Long taskId = taskUpdateDTO.getTaskId();
+        if (taskId == null) {
+            return Result.error("任务ID不能为空");
+        }
+        if (taskMapper.getTaskByTaskId(taskId) == null) {
+            return Result.error("任务不存在");
+        }
+        Task task = new Task();
+        task.setTaskId(taskUpdateDTO.getTaskId());
+        task.setTitle(taskUpdateDTO.getTitle());
+        task.setRemark(taskUpdateDTO.getRemark());
+        task.setEndTime(taskUpdateDTO.getEndTime());
+        task.setReminderTime(taskUpdateDTO.getReminderTime());
+        task.setPriority(taskUpdateDTO.getPriority());
+        
+        if (taskMapper.updateTaskInfo(task) == 0) {
+            return Result.error("更新任务信息失败");
+        }
+        return Result.success(convertToTaskVO(taskMapper.getTaskByTaskId(taskId)));
     }
 
     /**

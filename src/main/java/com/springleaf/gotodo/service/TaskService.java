@@ -2,6 +2,7 @@ package com.springleaf.gotodo.service;
 
 import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.model.dto.TaskSaveDTO;
+import com.springleaf.gotodo.model.dto.TaskUpdateDTO;
 import com.springleaf.gotodo.model.vo.TaskVO;
 
 import java.util.List;
@@ -35,4 +36,11 @@ public interface TaskService {
      * @return Result<Void>
      */
     Result<Void> completedTask(Long taskId, Boolean status);
+
+    /**
+     * 更新任务基本信息（标题、备注、时间等）
+     * @param taskUpdateDTO 任务更新DTO
+     * @return Result<TaskVO>
+     */
+    Result<TaskVO> updateTaskInfo(TaskUpdateDTO taskUpdateDTO);
 }
