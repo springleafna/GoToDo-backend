@@ -1,13 +1,13 @@
 package com.springleaf.gotodo.model.dto;
 
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
  * 任务更新DTO
  */
-@Getter
+@Data
 public class TaskUpdateDTO {
 
     /**

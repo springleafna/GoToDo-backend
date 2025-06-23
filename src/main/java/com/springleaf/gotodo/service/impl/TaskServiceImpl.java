@@ -68,7 +68,7 @@ public class TaskServiceImpl implements TaskService {
             return Result.error("任务分类不存在");
         }
         List<Task> taskList = taskMapper.getTaskListByCategoryId(categoryId);
-        if (taskList.isEmpty()) {
+        if (taskList == null || taskList.isEmpty()) {
             return Result.success(Collections.emptyList());
         }
 

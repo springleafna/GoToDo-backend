@@ -9,7 +9,16 @@
         <result property="deleted" column="deleted"/>
     </resultMap>
 
+    <insert id="saveCategory">
+        INSERT INTO tb_category (category_name, deleted)
+        VALUES (#{categoryName}, #{deleted})
+    </insert>
+
     <select id="getCategoryByCategoryId" resultMap="resultMap">
         SELECT * FROM tb_category WHERE category_id = #{categoryId}
+    </select>
+
+    <select id="listCategory" resultMap="resultMap">
+        SELECT * FROM tb_category WHERE deleted = 0
     </select>
 </mapper>

@@ -1,13 +1,13 @@
 package com.springleaf.gotodo.model.vo;
 
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
  * 任务视图对象
  */
-@Setter
+@Data
 public class TaskVO {
     /**
      * 任务ID

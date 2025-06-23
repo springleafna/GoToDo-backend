@@ -13,7 +13,6 @@ public class ApiTest {
 
     @Test
     public void Test() {
-        System.out.println(categoryMapper);
-        System.out.println(categoryMapper.getCategoryByCategoryId(1L));
+        System.out.println(categoryMapper.listCategory());
     }
 }

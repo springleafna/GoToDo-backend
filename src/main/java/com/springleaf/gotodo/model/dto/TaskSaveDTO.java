@@ -1,12 +1,12 @@
 package com.springleaf.gotodo.model.dto;
 
 
-import lombok.Getter;
+import lombok.Data;
 
 /**
  * 任务新增DTO
  */
-@Getter
+@Data
 public class TaskSaveDTO {
 
     /**
