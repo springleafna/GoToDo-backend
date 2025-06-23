@@ -25,4 +25,13 @@
         SELECT * FROM tb_favorite WHERE task_id = #{taskId}
     </select>
 
+    <select id="getFavoriteList" resultType="com.springleaf.gotodo.model.entity.Task">
+        SELECT t.*
+        FROM tb_task t
+        INNER JOIN tb_favorite f ON t.task_id = f.task_id
+        WHERE f.status = 1
+        AND t.deleted = 0
+        ORDER BY f.create_time DESC
+    </select>
+
 </mapper>

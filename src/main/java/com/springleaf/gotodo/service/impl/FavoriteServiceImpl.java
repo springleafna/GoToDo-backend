@@ -5,10 +5,14 @@ import com.springleaf.gotodo.enums.FavoriteStatusEnum;
 import com.springleaf.gotodo.mapper.FavoriteMapper;
 import com.springleaf.gotodo.mapper.TaskMapper;
 import com.springleaf.gotodo.model.entity.Favorite;
+import com.springleaf.gotodo.model.entity.Task;
+import com.springleaf.gotodo.model.vo.TaskVO;
 import com.springleaf.gotodo.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +62,17 @@ public class FavoriteServiceImpl implements FavoriteService {
         }
 
         return Result.success();
+    }
+
+    @Override
+    public Result<Integer> countFavorite() {
+        return Result.success(favoriteMapper.countFavorite());
+    }
+
+    @Override
+    public Result<List<TaskVO>> getFavoriteList() {
+        // TODO
+        List<Task> taskVOList = favoriteMapper.getFavoriteList();
+        return null;
     }
 }

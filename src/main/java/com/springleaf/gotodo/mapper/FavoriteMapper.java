@@ -1,8 +1,11 @@
 package com.springleaf.gotodo.mapper;
 
 import com.springleaf.gotodo.model.entity.Favorite;
+import com.springleaf.gotodo.model.entity.Task;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface FavoriteMapper {
@@ -25,4 +28,9 @@ public interface FavoriteMapper {
      * 获取收藏实体
      */
     Favorite getFavoriteByTaskId(Long taskId);
+
+    /**
+     * 获取收藏的任务列表
+     */
+    List<Task> getFavoriteList();
 }
