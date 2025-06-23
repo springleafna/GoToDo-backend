@@ -2,6 +2,7 @@ package com.springleaf.gotodo.mapper;
 
 import com.springleaf.gotodo.model.entity.Task;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,10 +16,25 @@ public interface TaskMapper {
     /**
      * 删除任务
      */
-    int deleteTaskByTaskId(Integer taskId);
+    int deleteTaskByTaskId(Long taskId);
 
     /**
-     * 根据任务列表ID获取所有任务
+     * 根据任务分类ID获取所有任务
      */
-    List<Task> getTaskList(Integer listId);
+    List<Task> getTaskListByCategoryId(Long categoryId);
+
+    /**
+     * 更新任务状态（完成/未完成）
+     */
+    int updateTaskStatus(@Param("taskId") Long taskId, @Param("status") Integer status);
+
+    /**
+     * 更新任务基本信息（标题、备注、时间等）
+     */
+    int updateTaskInfo(Task task);
+
+    /**
+     * 根据任务ID获取任务
+     */
+    Task getTaskByTaskId(Long taskId);
 }

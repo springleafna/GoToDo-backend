@@ -1,13 +1,16 @@
 package com.springleaf.gotodo.enums;
 
+import lombok.Getter;
+
 /**
  * 展示项类型枚举
- * 用于区分是任务组(group) 还是 任务分类(list)
+ * 用于区分是任务组(group) 还是 任务分类(category)
  */
+@Getter
 public enum ItemTypeEnum {
 
     GROUP("group", "任务组"),
-    LIST("list", "任务列表");
+    CATEGORY("category", "任务分类");
 
     private final String code;
     private final String desc;
@@ -15,14 +18,6 @@ public enum ItemTypeEnum {
     ItemTypeEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 
     /**

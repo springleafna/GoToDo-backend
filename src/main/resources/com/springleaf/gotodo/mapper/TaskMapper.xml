@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springleaf.gotodo.mapper.TaskMapper">
+
+    <resultMap id="resultMap" type="com.springleaf.gotodo.model.entity.Task">
+        <id property="taskId" column="task_id"/>
+        <result property="title" column="title"/>
+        <result property="remark" column="remark"/>
+        <result property="endTime" column="end_time"/>
+        <result property="reminderTime" column="reminder_time"/>
+        <result property="completed" column="completed"/>
+        <result property="priority" column="priority"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <insert id="saveTask" useGeneratedKeys="true" keyProperty="taskId">
+        INSERT INTO tb_task (title, remark, end_time, reminder_time, completed, priority, deleted)
+        VALUES (#{title}, #{remark}, #{endTime}, #{reminderTime}, #{completed}, #{priority}, #{deleted})
+    </insert>
+
+    <update id="updateTaskStatus">
+        UPDATE tb_task SET completed = #{status} WHERE task_id = #{taskId} AND deleted = 0;
+    </update>
+
+    <update id="updateTaskInfo">
+        UPDATE tb_task
+        SET title = #{title},
+        remark = #{remark},
+        end_time = #{endTime},
+        reminder_time = #{reminderTime},
+        priority = #{priority}
+        WHERE task_id = #{taskId}
+        AND deleted = 0
+    </update>
+
+    <delete id="deleteTaskByTaskId">
+        UPDATE tb_task SET deleted = 1 WHERE task_id = #{taskId}
+    </delete>
+
+    <select id="getTaskListByCategoryId" resultMap="resultMap">
+        SELECT t.*
+        FROM tb_task t
+        INNER JOIN tb_category_task ct ON t.task_id = ct.task_id
+        WHERE ct.category_id = #{categoryId}
+        AND t.deleted = 0
+    </select>
+
+    <select id="getTaskByTaskId" resultMap="resultMap">
+        SELECT * FROM tb_task WHERE task_id = #{taskId} AND deleted = 0;
+    </select>
+
+</mapper>

@@ -1,8 +1,11 @@
 package com.springleaf.gotodo.enums;
 
+import lombok.Getter;
+
 /**
  * 任务优先级枚举 (0:低 1:中 2:高)
  */
+@Getter
 public enum PriorityEnum {
 
     LOW(0, "低"),
@@ -15,14 +18,6 @@ public enum PriorityEnum {
     PriorityEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 
     public static PriorityEnum fromCode(int code) {

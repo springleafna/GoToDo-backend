@@ -8,16 +8,16 @@ import java.time.LocalDateTime;
  * 任务分类表实体类
  */
 @Data
-public class List {
+public class Category {
     /**
      * 分类ID
      */
-    private Long listId;
+    private Long categoryId;
 
     /**
      * 分类名称
      */
-    private String listName;
+    private String categoryName;
 
     /**
      * 创建时间

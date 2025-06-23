@@ -3,19 +3,19 @@ package com.springleaf.gotodo.model.entity;
 import lombok.Data;
 
 /**
- * 任务组-任务列表-关联表实体类
+ * 任务组-任务分类-关联表实体类
  */
 @Data
-public class GroupList {
+public class GroupCategory {
     /**
-     * 任务组-任务列表-关联ID
+     * 任务组-任务类-关联ID
      */
     private Long groupTaskId;
 
     /**
-     * 任务列表ID
+     * 任务类ID
      */
-    private Long listId;
+    private Long categoryId;
 
     /**
      * 任务组ID
@@ -23,7 +23,7 @@ public class GroupList {
     private Long groupId;
 
     /**
-     * 任务列表在组内的排序
+     * 任务类在组内的排序
      */
     private Integer sortOrder;
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springleaf.gotodo.mapper.CategoryMapper">
+    <resultMap id="resultMap" type="com.springleaf.gotodo.model.entity.Category">
+        <id property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <select id="getCategoryByCategoryId" resultMap="resultMap">
+        SELECT * FROM tb_category WHERE category_id = #{categoryId}
+    </select>
+</mapper>

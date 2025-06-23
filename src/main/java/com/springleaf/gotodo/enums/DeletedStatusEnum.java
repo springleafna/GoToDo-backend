@@ -1,8 +1,11 @@
 package com.springleaf.gotodo.enums;
 
+import lombok.Getter;
+
 /**
  * 删除标记枚举 (0:正常 1:删除)
  */
+@Getter
 public enum DeletedStatusEnum {
 
     NORMAL(0, "正常"),
@@ -14,14 +17,6 @@ public enum DeletedStatusEnum {
     DeletedStatusEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 
     public static DeletedStatusEnum fromCode(int code) {

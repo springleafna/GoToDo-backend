@@ -1,8 +1,11 @@
 package com.springleaf.gotodo.enums;
 
+import lombok.Getter;
+
 /**
  * 收藏状态枚举 (1:已收藏 0:已取消)
  */
+@Getter
 public enum FavoriteStatusEnum {
 
     FAVORITE(1, "已收藏"),
@@ -14,14 +17,6 @@ public enum FavoriteStatusEnum {
     FavoriteStatusEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 
     public static FavoriteStatusEnum fromCode(int code) {

@@ -1,8 +1,11 @@
 package com.springleaf.gotodo.enums;
 
+import lombok.Getter;
+
 /**
  * 完成状态枚举 (0:未完成 1:已完成)
  */
+@Getter
 public enum CompletedStatusEnum {
 
     NOT_COMPLETED(0, "未完成"),
@@ -14,14 +17,6 @@ public enum CompletedStatusEnum {
     CompletedStatusEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 
     public static CompletedStatusEnum fromCode(int code) {

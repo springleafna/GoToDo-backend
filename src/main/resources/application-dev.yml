@@ -8,5 +8,10 @@ spring:
     #useSSL=false：这个参数的设置表示在与 MySQL 数据库建立连接时不启用 SSL 加密
     url: jdbc:mysql://localhost:3306/gotodo?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC
     username: root
-    password: 1234
+    password: Yjw0117#
     driver-class-name: com.mysql.cj.jdbc.Driver
+logging:
+  level:
+    com.springleaf.gotodo.mapper: DEBUG
+    org.apache.ibatis: DEBUG
+    org.apache.ibatis.logging.stdout.StdOutImpl: DEBUG
