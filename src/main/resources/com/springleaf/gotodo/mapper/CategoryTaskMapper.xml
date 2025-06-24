@@ -12,12 +12,40 @@
         INSERT INTO tb_category_task (category_id, task_id) VALUES (#{categoryId}, #{taskId})
     </insert>
 
+    <update id="updateCategoryTaskSortOrder">
+        UPDATE tb_category_task SET sort_order = #{sortOrder} WHERE category_id = #{categoryId} AND task_id = #{taskId}
+    </update>
+
+    <update id="batchUpdateCategoryTaskSortOrder">
+        UPDATE tb_category_task
+        SET sort_order = CASE
+        <foreach collection="updateCategoryTaskList" item="item">
+            WHEN category_id = #{item.categoryId} AND task_id = #{item.taskId} THEN #{item.sortOrder}
+        </foreach>
+        END
+        WHERE (
+        <foreach collection="updateCategoryTaskList" item="item" separator=" OR ">
+            category_id = #{item.categoryId} AND task_id = #{item.taskId}
+        </foreach>
+        )
+    </update>
+
     <delete id="deleteTaskCategoryByTaskId">
         DELETE FROM tb_category_task WHERE task_id = #{taskId}
     </delete>
 
     <select id="getCategoryTaskByTaskId" resultMap="resultMap">
         SELECT * FROM tb_category_task WHERE task_id = #{taskId} AND category_id = #{categoryId}
+    </select>
+
+    <select id="getCategoryTasksByCategoryIdAndTaskIds" resultMap="resultMap">
+        SELECT *
+        FROM tb_category_task
+        WHERE category_id = #{categoryId}
+        AND task_id IN
+        <foreach item="taskId" collection="validTaskIds" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
     </select>
 
 </mapper>

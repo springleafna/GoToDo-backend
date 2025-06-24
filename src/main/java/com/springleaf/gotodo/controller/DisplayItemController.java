@@ -16,7 +16,10 @@ import java.util.List;
 public class DisplayItemController {
     
     private final DisplayItemService displayItemService;
-    
+
+    /**
+     * 获取所有的展示项
+     */
     @GetMapping("/list")
     public Result<List<DisplayItemVO>> listDisplayItem() {
         return displayItemService.listDisplayItem();

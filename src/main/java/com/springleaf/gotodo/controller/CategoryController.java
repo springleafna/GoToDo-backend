@@ -1,9 +1,11 @@
 package com.springleaf.gotodo.controller;
 
 import com.springleaf.gotodo.common.Result;
+import com.springleaf.gotodo.model.dto.TaskSortDTO;
 import com.springleaf.gotodo.model.vo.CategoryVO;
 import com.springleaf.gotodo.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryController {
     
     private final CategoryService categoryService;
@@ -38,5 +41,13 @@ public class CategoryController {
     public Result<Void> moveTaskToCategory(@RequestParam("taskId") Long taskId,
                                            @RequestParam("categoryId") Long categoryId) {
         return categoryService.moveTaskToCategory(taskId, categoryId);
+    }
+
+    /**
+     * 任务排序
+     */
+    @PutMapping("/sort")
+    public Result<Void> sortTask(@RequestBody TaskSortDTO taskSortDTO) {
+        return categoryService.sortTask(taskSortDTO.getCategoryId(), taskSortDTO.getTaskIds());
     }
 }

@@ -26,4 +26,12 @@ public interface CategoryService {
      * @return Result<Void>
      */
     Result<Void> moveTaskToCategory(Long taskId, Long categoryId);
+
+    /**
+     * 任务排序
+     * @param categoryId 分类ID
+     * @param taskIds 任务ID列表
+     * @return Result<Void>
+     */
+    Result<Void> sortTask(Long categoryId, List<Long> taskIds);
 }
