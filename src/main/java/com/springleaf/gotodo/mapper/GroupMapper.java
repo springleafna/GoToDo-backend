@@ -1,5 +1,6 @@
 package com.springleaf.gotodo.mapper;
 
+import com.springleaf.gotodo.model.entity.Group;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +20,9 @@ public interface GroupMapper {
      * 修改任务组名称
      */
     int updateGroupName(@Param("groupId") Long groupId, @Param("groupName") String groupName);
+
+    /**
+     * 根据组ID获取组
+     */
+    Group getGroupByGroupId(Long groupId);
 }

@@ -10,6 +10,9 @@ spring:
     username: root
     password: Yjw0117#
     driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
 logging:
   level:
     com.springleaf.gotodo.mapper: DEBUG

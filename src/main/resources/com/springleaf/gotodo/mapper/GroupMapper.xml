@@ -21,4 +21,8 @@
         UPDATE tb_group SET group_name = #{groupName} WHERE group_id = #{groupId} AND deleted = 0
     </update>
 
+    <select id="getGroupByGroupId" resultMap="resultMap">
+        SELECT * FROM tb_group WHERE group_id = #{groupId}
+    </select>
+
 </mapper>

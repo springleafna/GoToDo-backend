@@ -34,6 +34,7 @@ public class FavoriteController {
     /**
      * 获取收藏的任务列表
      */
+    @GetMapping("/list")
     public Result<List<TaskVO>> getFavoriteList() {
         return favoriteService.getFavoriteList();
     }

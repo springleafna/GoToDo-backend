@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -71,8 +72,30 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Result<List<TaskVO>> getFavoriteList() {
-        // TODO
-        List<Task> taskVOList = favoriteMapper.getFavoriteList();
-        return null;
+        // 获取到所有的已收藏的任务
+        List<Task> taskList = favoriteMapper.getFavoriteList();
+        if (taskList == null || taskList.isEmpty()) {
+            return Result.success(Collections.emptyList());
+        }
+        // 转换为VO对象
+        List<TaskVO> taskVOList = taskList.stream()
+                .map(this::convertToTaskVO)
+                .toList();
+        return Result.success(taskVOList);
+    }
+    
+    private TaskVO convertToTaskVO(Task task) {
+        TaskVO taskVO = new TaskVO();
+        taskVO.setTaskId(task.getTaskId());
+        taskVO.setTaskId(task.getTaskId());
+        taskVO.setTitle(task.getTitle());
+        taskVO.setRemark(task.getRemark());
+        taskVO.setEndTime(task.getEndTime());
+        taskVO.setReminderTime(task.getReminderTime());
+        taskVO.setCompleted(task.getCompleted());
+        taskVO.setPriority(task.getPriority());
+        taskVO.setFavorite(FavoriteStatusEnum.FAVORITE.getCode());
+        taskVO.setCreateTime(task.getCreateTime());
+        return taskVO;
     }
 }

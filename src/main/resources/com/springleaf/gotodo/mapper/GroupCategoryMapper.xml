@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springleaf.gotodo.mapper.GroupCategoryMapper">
+    <resultMap id="resultMap" type="com.springleaf.gotodo.model.entity.GroupCategory">
+        <id property="groupTaskId" column="group_task_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="sortOrder" column="sort_order"/>
+    </resultMap>
+
+    <insert id="saveGroupCategory">
+        INSERT INTO tb_group_category (category_id, group_id, sort_order)
+        VALUES (#{categoryId}, #{groupId}, #{sortOrder})
+    </insert>
+
+    <delete id="deleteGroupCategory">
+        DELETE * FROM tb_group_category WHERE group_id = #{groupId} AND category_id =#{categoryId}
+    </delete>
+
+    <delete id="deleteGroupCategoryByCategoryId">
+        DELETE from tb_group_category WHERE category_id =#{categoryId}
+    </delete>
+
+    <select id="getGroupCategoryByGroupIdAndCategoryId"
+            resultMap="resultMap">
+        SELECT * FROM tb_group_category WHERE group_id = #{groupId} AND category_id =#{categoryId}
+    </select>
+
+    <select id="getGroupCategoryByCategoryId"
+            resultMap="resultMap">
+        SELECT * FROM tb_group_category WHERE category_id =#{categoryId}
+    </select>
+
+
+</mapper>
