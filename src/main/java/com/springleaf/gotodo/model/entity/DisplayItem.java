@@ -10,7 +10,7 @@ public class DisplayItem {
     /**
      * 展示项ID
      */
-    private Long item_id;
+    private Long itemId;
 
     /**
      * 类型(group:组 category:分类)

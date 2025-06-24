@@ -9,7 +9,7 @@
         <result property="deleted" column="deleted"/>
     </resultMap>
 
-    <insert id="saveCategory">
+    <insert id="saveCategory" useGeneratedKeys="true" keyProperty="categoryId">
         INSERT INTO tb_category (category_name, deleted)
         VALUES (#{categoryName}, #{deleted})
     </insert>

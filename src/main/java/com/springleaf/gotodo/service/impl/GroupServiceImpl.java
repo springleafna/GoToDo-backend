@@ -1,10 +1,11 @@
 package com.springleaf.gotodo.service.impl;
 
 import com.springleaf.gotodo.common.Result;
-import com.springleaf.gotodo.mapper.CategoryMapper;
-import com.springleaf.gotodo.mapper.GroupCategoryMapper;
-import com.springleaf.gotodo.mapper.GroupMapper;
-import com.springleaf.gotodo.mapper.TaskMapper;
+import com.springleaf.gotodo.enums.DeletedStatusEnum;
+import com.springleaf.gotodo.enums.ItemTypeEnum;
+import com.springleaf.gotodo.mapper.*;
+import com.springleaf.gotodo.model.entity.DisplayItem;
+import com.springleaf.gotodo.model.entity.Group;
 import com.springleaf.gotodo.model.entity.GroupCategory;
 import com.springleaf.gotodo.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupServiceImpl implements GroupService {
     
     private final GroupMapper groupMapper;
-    private final TaskMapper taskMapper;
     private final CategoryMapper categoryMapper;
     private final GroupCategoryMapper groupCategoryMapper;
+    private final DisplayItemMapper displayItemMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -54,8 +55,20 @@ public class GroupServiceImpl implements GroupService {
         if (groupName == null || groupName.isEmpty()) {
             return Result.error("任务组名称不能为空");
         }
-        if (groupMapper.saveGroup(groupName) == 0) {
+
+        Group group = new Group();
+        group.setGroupName(groupName);
+        group.setDeleted(DeletedStatusEnum.NORMAL.getCode());
+        if (groupMapper.saveGroup(group) == 0) {
             return Result.error("任务组保存失败");
+        }
+        // 保存记录到展示项表中
+        DisplayItem displayItem = new DisplayItem();
+        displayItem.setItemType(ItemTypeEnum.GROUP.getCode());
+        displayItem.setItemRefId(group.getGroupId());
+        displayItem.setSortOrder(0);
+        if (displayItemMapper.saveDisplayItem(displayItem) == 0) {
+            return Result.error("保存展示项失败");
         }
         return Result.success();
     }

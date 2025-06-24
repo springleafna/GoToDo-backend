@@ -1,5 +1,7 @@
 package com.springleaf.gotodo.mapper;
 
+import com.springleaf.gotodo.model.entity.CategoryTask;
+import com.springleaf.gotodo.model.entity.Task;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,4 +16,9 @@ public interface CategoryTaskMapper {
      * 删除任务和分类关联关系
      */
     int deleteTaskCategoryByTaskId(Long taskId);
+
+    /**
+     * 获取任务和分类关联关系
+     */
+    CategoryTask getCategoryTaskByTaskId(@Param("taskId") Long taskId, @Param("categoryId") Long categoryId);
 }

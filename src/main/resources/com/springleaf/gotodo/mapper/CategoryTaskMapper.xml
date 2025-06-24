@@ -16,4 +16,8 @@
         DELETE FROM tb_category_task WHERE task_id = #{taskId}
     </delete>
 
+    <select id="getCategoryTaskByTaskId" resultMap="resultMap">
+        SELECT * FROM tb_category_task WHERE task_id = #{taskId} AND category_id = #{categoryId}
+    </select>
+
 </mapper>

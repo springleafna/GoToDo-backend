@@ -2,10 +2,13 @@ package com.springleaf.gotodo.service.impl;
 
 import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.enums.DeletedStatusEnum;
+import com.springleaf.gotodo.enums.ItemTypeEnum;
 import com.springleaf.gotodo.mapper.CategoryMapper;
 import com.springleaf.gotodo.mapper.CategoryTaskMapper;
+import com.springleaf.gotodo.mapper.DisplayItemMapper;
 import com.springleaf.gotodo.mapper.TaskMapper;
 import com.springleaf.gotodo.model.entity.Category;
+import com.springleaf.gotodo.model.entity.DisplayItem;
 import com.springleaf.gotodo.model.vo.CategoryVO;
 import com.springleaf.gotodo.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
     private final TaskMapper taskMapper;
     private final CategoryTaskMapper categoryTaskMapper;
+    private final DisplayItemMapper displayItemMapper;
 
     @Override
     public Result<List<CategoryVO>> listCategory() {
@@ -35,6 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
         return Result.success(categoryVOList);
     }
 
+    @Transactional
     @Override
     public Result<Void> saveCategory(String categoryName) {
         if (categoryName == null || categoryName.isBlank()) {
@@ -45,6 +50,14 @@ public class CategoryServiceImpl implements CategoryService {
         category.setDeleted(DeletedStatusEnum.NORMAL.getCode());
         if (categoryMapper.saveCategory(category) == 0) {
             return Result.error("保存分类失败");
+        }
+        // 保存记录到展示项表中
+        DisplayItem displayItem = new DisplayItem();
+        displayItem.setItemType(ItemTypeEnum.CATEGORY.getCode());
+        displayItem.setItemRefId(category.getCategoryId());
+        displayItem.setSortOrder(0);
+        if (displayItemMapper.saveDisplayItem(displayItem) == 0) {
+            return Result.error("保存展示项失败");
         }
         return Result.success();
     }
@@ -64,11 +77,16 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryMapper.getCategoryByCategoryId(categoryId) == null) {
             return Result.error("分类不存在");
         }
-        // 1. 先删除原有的分类任务关系
+        // 1. 检查是否已经存在关联
+        if (categoryTaskMapper.getCategoryTaskByTaskId(taskId, categoryId) != null) {
+            return Result.success();
+        }
+        
+        // 2. 先删除原有的分类任务关系
         if (categoryTaskMapper.deleteTaskCategoryByTaskId(taskId) == 0) {
             return Result.error("删除分类任务关系失败");
         }
-        // 2. 再建立新的分类任务关系
+        // 3. 再建立新的分类任务关系
         if (categoryTaskMapper.saveCategoryTask(categoryId, taskId) == 0) {
             return Result.error("建立分类任务关系失败");
         }

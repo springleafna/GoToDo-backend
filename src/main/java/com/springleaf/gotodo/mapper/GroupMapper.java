@@ -9,7 +9,7 @@ public interface GroupMapper {
     /**
      * 新增任务组
      */
-    int saveGroup(String groupName);
+    int saveGroup(Group group);
 
     /**
      * 删除任务组

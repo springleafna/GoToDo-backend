@@ -24,7 +24,7 @@ public class CategoryController {
     }
 
     /**
-     * 添加任务分类
+     * 创建任务分类
      */
     @PostMapping("/save")
     public Result<Void> saveCategory(@RequestParam("categoryName") String categoryName) {
@@ -35,8 +35,8 @@ public class CategoryController {
      * 将一个任务移动到某个任务分类下
      */
     @PutMapping("/move")
-    public Result<Void> moveTaskToCategory(@RequestParam("taskId") Long TaskId, 
+    public Result<Void> moveTaskToCategory(@RequestParam("taskId") Long taskId,
                                            @RequestParam("categoryId") Long categoryId) {
-        return categoryService.moveTaskToCategory(TaskId, categoryId);
+        return categoryService.moveTaskToCategory(taskId, categoryId);
     }
 }

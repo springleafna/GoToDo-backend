@@ -9,8 +9,8 @@
         <result property="deleted" column="deleted"/>
     </resultMap>
 
-    <insert id="saveGroup">
-        INSERT INTO tb_group (group_name) VALUES (#{groupName})
+    <insert id="saveGroup" useGeneratedKeys="true" keyProperty="groupId">
+        INSERT INTO tb_group (group_name, deleted) VALUES (#{groupName}, #{deleted})
     </insert>
 
     <update id="deleteGroup">
