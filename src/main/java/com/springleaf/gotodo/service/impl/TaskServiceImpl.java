@@ -3,12 +3,15 @@ package com.springleaf.gotodo.service.impl;
 import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.enums.CompletedStatusEnum;
 import com.springleaf.gotodo.enums.DeletedStatusEnum;
+import com.springleaf.gotodo.enums.FavoriteStatusEnum;
 import com.springleaf.gotodo.enums.PriorityEnum;
 import com.springleaf.gotodo.mapper.CategoryMapper;
 import com.springleaf.gotodo.mapper.CategoryTaskMapper;
+import com.springleaf.gotodo.mapper.FavoriteMapper;
 import com.springleaf.gotodo.mapper.TaskMapper;
 import com.springleaf.gotodo.model.dto.TaskSaveDTO;
 import com.springleaf.gotodo.model.dto.TaskUpdateDTO;
+import com.springleaf.gotodo.model.entity.Favorite;
 import com.springleaf.gotodo.model.entity.Task;
 import com.springleaf.gotodo.model.vo.TaskVO;
 import com.springleaf.gotodo.service.TaskService;
@@ -30,6 +33,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final CategoryMapper categoryMapper;
     private final CategoryTaskMapper categoryTaskMapper;
+    private final FavoriteMapper favoriteMapper;
     
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -154,6 +158,14 @@ public class TaskServiceImpl implements TaskService {
         taskVO.setCompleted(task.getCompleted());
         taskVO.setPriority(task.getPriority());
         taskVO.setCreateTime(task.getCreateTime());
+        
+        // 判断该任务是否被收藏
+        Favorite favoriteByTaskId = favoriteMapper.getFavoriteByTaskId(task.getTaskId());
+        if (favoriteByTaskId == null) {
+            taskVO.setFavorite(FavoriteStatusEnum.CANCELLED.getCode());
+            return taskVO;
+        }
+        taskVO.setFavorite(favoriteByTaskId.getStatus());
         return taskVO;
     }
 }
