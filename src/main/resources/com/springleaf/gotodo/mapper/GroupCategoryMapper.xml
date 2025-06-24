@@ -14,7 +14,7 @@
     </insert>
 
     <delete id="deleteGroupCategory">
-        DELETE * FROM tb_group_category WHERE group_id = #{groupId} AND category_id =#{categoryId}
+        DELETE FROM tb_group_category WHERE group_id = #{groupId} AND category_id =#{categoryId}
     </delete>
 
     <delete id="deleteGroupCategoryByCategoryId">

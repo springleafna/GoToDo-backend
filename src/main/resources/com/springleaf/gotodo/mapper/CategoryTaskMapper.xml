@@ -12,4 +12,8 @@
         INSERT INTO tb_category_task (category_id, task_id) VALUES (#{categoryId}, #{taskId})
     </insert>
 
+    <delete id="deleteTaskCategoryByTaskId">
+        DELETE FROM tb_category_task WHERE task_id = #{taskId}
+    </delete>
+
 </mapper>

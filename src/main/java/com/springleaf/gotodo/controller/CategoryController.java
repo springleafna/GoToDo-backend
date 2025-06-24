@@ -30,4 +30,13 @@ public class CategoryController {
     public Result<Void> saveCategory(@RequestParam("categoryName") String categoryName) {
         return categoryService.saveCategory(categoryName);
     }
+
+    /**
+     * 将一个任务移动到某个任务分类下
+     */
+    @PutMapping("/move")
+    public Result<Void> moveTaskToCategory(@RequestParam("taskId") Long TaskId, 
+                                           @RequestParam("categoryId") Long categoryId) {
+        return categoryService.moveTaskToCategory(TaskId, categoryId);
+    }
 }

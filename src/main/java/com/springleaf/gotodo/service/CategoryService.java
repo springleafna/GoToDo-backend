@@ -18,4 +18,12 @@ public interface CategoryService {
      * @return Result<Void>
      */
     Result<Void> saveCategory(String categoryName);
+
+    /**
+     * 移动任务到指定分类
+     * @param taskId 任务ID
+     * @param categoryId 分类ID
+     * @return Result<Void>
+     */
+    Result<Void> moveTaskToCategory(Long taskId, Long categoryId);
 }

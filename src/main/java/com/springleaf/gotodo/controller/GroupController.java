@@ -15,7 +15,7 @@ public class GroupController {
     /**
      * 将一个任务类移动到某个任务组下
      */
-    @PutMapping("/remove")
+    @PutMapping("/move")
     public Result<Void> moveCategoryToGroup
             (@RequestParam("categoryId") Long categoryId, @RequestParam("groupId") Long groupId) {
         return groupService.moveCategoryToGroup(categoryId, groupId);
