@@ -48,4 +48,11 @@ public interface TaskService {
      * 执行定时任务（任务提醒）
      */
     void checkAndSendReminders();
+
+    /**
+     * 获取任务详细信息
+     * @param taskId 任务ID
+     * @return Result<TaskVO>
+     */
+    Result<TaskVO> getTaskDetail(Long taskId);
 }

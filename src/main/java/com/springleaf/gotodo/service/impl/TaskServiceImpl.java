@@ -18,6 +18,7 @@ import com.springleaf.gotodo.model.vo.TaskVO;
 import com.springleaf.gotodo.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -179,6 +180,21 @@ public class TaskServiceImpl implements TaskService {
         for (Task task : remindTask) {
             log.info("发送任务提醒通知：{}", task);
         }
+    }
+
+    @Override
+    public Result<TaskVO> getTaskDetail(Long taskId) {
+        // TODO:获取任务详情功能未完善
+        if (taskId == null) {
+            return Result.error("任务ID不能为空");
+        }
+        Task task = taskMapper.getTaskByTaskId(taskId);
+        if (task == null) {
+            return Result.error("该任务不存在");
+        }
+        TaskVO taskVO = new TaskVO();
+        BeanUtils.copyProperties(task, taskVO);
+        return Result.success(taskVO);
     }
 
     /**

@@ -56,4 +56,12 @@ public class TaskController {
     public Result<Void> updateTaskInfo(@RequestBody TaskUpdateDTO taskUpdateDTO) {
         return taskService.updateTaskInfo(taskUpdateDTO);
     }
+
+    /**
+     * 根据任务ID获取任务详细信息
+     */
+    @GetMapping("/detail")
+    public Result<TaskVO> getTaskDetail(@RequestParam Long taskId) {
+        return taskService.getTaskDetail(taskId);
+    }
 }
