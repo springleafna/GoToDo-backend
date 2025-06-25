@@ -42,5 +42,5 @@ public interface TaskService {
      * @param taskUpdateDTO 任务更新DTO
      * @return Result<TaskVO>
      */
-    Result<TaskVO> updateTaskInfo(TaskUpdateDTO taskUpdateDTO);
+    Result<Void> updateTaskInfo(TaskUpdateDTO taskUpdateDTO);
 }

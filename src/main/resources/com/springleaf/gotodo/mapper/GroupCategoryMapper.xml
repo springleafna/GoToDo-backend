@@ -58,4 +58,9 @@
     <select id="getMaxSortOrderByGroupId" resultType="java.lang.Integer">
         SELECT COALESCE(MAX(sort_order), -1) FROM tb_group_category WHERE group_id = #{groupId}
     </select>
+
+    <select id="getGroupCategoriesByGroupId" resultMap="resultMap">
+        SELECT * FROM tb_group_category WHERE group_id = #{groupId}
+                ORDER BY sort_order ASC
+    </select>
 </mapper>

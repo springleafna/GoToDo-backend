@@ -54,4 +54,8 @@ public class TaskVO {
      */
     private LocalDateTime createTime;
 
+    /**
+     * 排序
+     */
+    private Integer sortOrder;
 }

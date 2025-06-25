@@ -2,10 +2,12 @@ package com.springleaf.gotodo.controller;
 
 import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.model.dto.CategorySortDTO;
-import com.springleaf.gotodo.model.dto.TaskSortDTO;
+import com.springleaf.gotodo.model.vo.CategoryVO;
 import com.springleaf.gotodo.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/group")
@@ -35,7 +37,15 @@ public class GroupController {
      * 任务类排序
      */
     @PutMapping("/sort")
-    public Result<Void> sortTask(@RequestBody CategorySortDTO taskSortDTO) {
+    public Result<Void> sortCategory(@RequestBody CategorySortDTO taskSortDTO) {
         return groupService.sortCategory(taskSortDTO.getGroupId(), taskSortDTO.getCategoryIds());
+    }
+
+    /**
+     * 获取某个任务组下的所有任务类
+     */
+    @GetMapping("/list")
+    public Result<List<CategoryVO>> listGroupCategory(@RequestParam("groupId") Long groupId) {
+        return groupService.listCategoryByGroup(groupId);
     }
 }

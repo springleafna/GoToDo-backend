@@ -4,6 +4,7 @@ import com.springleaf.gotodo.model.entity.Category;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface CategoryMapper {
@@ -21,4 +22,9 @@ public interface CategoryMapper {
      * 保存分类
      */
     int saveCategory(Category category);
+
+    /**
+     * 通过分类ID列表查找分类
+     */
+    List<Category> getCategoriesByIds(Set<Long> categoryIds);
 }

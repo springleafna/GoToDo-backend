@@ -21,4 +21,12 @@
     <select id="listCategory" resultMap="resultMap">
         SELECT * FROM tb_category WHERE deleted = 0
     </select>
+
+    <select id="getCategoriesByIds" resultMap="resultMap">
+        SELECT * FROM tb_category WHERE category_id IN
+        <foreach collection="categoryIds" item="categoryId" index="index" open="(" close=")" separator=",">
+            #{categoryId}
+        </foreach>
+        AND deleted = 0
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.springleaf.gotodo.service;
 
 import com.springleaf.gotodo.common.Result;
+import com.springleaf.gotodo.model.vo.CategoryVO;
 
 import java.util.List;
 
@@ -22,4 +23,9 @@ public interface GroupService {
      * @return Result<Void>
      */
     Result<Void> sortCategory(Long groupId, List<Long> categoryIds);
+
+    /**
+     * 获取任务组下的所有任务类
+     */
+    Result<List<CategoryVO>> listCategoryByGroup(Long groupId);
 }

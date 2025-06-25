@@ -11,11 +11,6 @@ import java.time.LocalDateTime;
 public class TaskUpdateDTO {
 
     /**
-     * 任务分类ID
-     */
-    private Long categoryId;
-
-    /**
      * 任务ID
      */
     private Long taskId;

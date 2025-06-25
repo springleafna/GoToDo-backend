@@ -53,7 +53,7 @@ public class TaskController {
      * 更新任务基本信息（标题、备注、时间等）
      */
     @PutMapping("/update")
-    public Result<TaskVO> updateTaskInfo(@RequestBody TaskUpdateDTO taskUpdateDTO) {
+    public Result<Void> updateTaskInfo(@RequestBody TaskUpdateDTO taskUpdateDTO) {
         return taskService.updateTaskInfo(taskUpdateDTO);
     }
 }

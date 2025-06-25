@@ -53,4 +53,10 @@
         WHERE category_id = #{categoryId}
     </select>
 
+    <select id="getCategoryTaskListByCategoryId"
+            resultMap="resultMap">
+        SELECT * FROM tb_category_task
+        WHERE category_id = #{categoryId}
+    </select>
+
 </mapper>

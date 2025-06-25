@@ -23,6 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -77,14 +81,26 @@ public class TaskServiceImpl implements TaskService {
         if (categoryMapper.getCategoryByCategoryId(categoryId) == null) {
             return Result.error("任务分类不存在");
         }
-        List<Task> taskList = taskMapper.getTaskListByCategoryId(categoryId);
-        if (taskList == null || taskList.isEmpty()) {
+        
+        // 根据分类ID从关联表中获取分类-任务关联列表
+        List<CategoryTask> categoryTaskList = categoryTaskMapper.getCategoryTaskListByCategoryId(categoryId);
+        if (categoryTaskList == null || categoryTaskList.isEmpty()) {
             return Result.success(Collections.emptyList());
         }
+        // 获取任务ID集合
+        Set<Long> TaskIds = categoryTaskList.stream()
+                .map(CategoryTask::getTaskId)
+                .collect(Collectors.toSet());
+        List<Task> taskList = taskMapper.getTaskByTaskIds(TaskIds);
+        // 将任务信息转换为Map，便于快速查找
+        Map<Long, Task> taskMap = taskList.stream()
+                .collect(Collectors.toMap(Task::getTaskId, Function.identity(), (existing, replacement) -> existing));
+        // 构建返回的TaskVO列表
+        List<TaskVO> taskVOList = categoryTaskList.stream()
+                .map(categoryTask -> convertToTaskVO(taskMap.get(categoryTask.getTaskId()), categoryTask.getSortOrder()))
+                .toList();
 
-        return Result.success(taskList.stream()
-                .map(this::convertToTaskVO)
-                .toList());
+        return Result.success(taskVOList);
     }
 
     @Override
@@ -125,7 +141,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Result<TaskVO> updateTaskInfo(TaskUpdateDTO taskUpdateDTO) {
+    public Result<Void> updateTaskInfo(TaskUpdateDTO taskUpdateDTO) {
         if (taskUpdateDTO == null) {
             return Result.error("任务更新信息不能为空");
         }
@@ -147,13 +163,13 @@ public class TaskServiceImpl implements TaskService {
         if (taskMapper.updateTaskInfo(task) == 0) {
             return Result.error("更新任务信息失败");
         }
-        return Result.success(convertToTaskVO(taskMapper.getTaskByTaskId(taskId)));
+        return Result.success();
     }
 
     /**
      * 单个 Task 转换为 TaskVO
      */
-    private TaskVO convertToTaskVO(Task task) {
+    private TaskVO convertToTaskVO(Task task, Integer sortOrder) {
         TaskVO taskVO = new TaskVO();
         taskVO.setTaskId(task.getTaskId());
         taskVO.setTitle(task.getTitle());
@@ -163,6 +179,7 @@ public class TaskServiceImpl implements TaskService {
         taskVO.setCompleted(task.getCompleted());
         taskVO.setPriority(task.getPriority());
         taskVO.setCreateTime(task.getCreateTime());
+        taskVO.setSortOrder(sortOrder);
         
         // 判断该任务是否被收藏
         Favorite favoriteByTaskId = favoriteMapper.getFavoriteByTaskId(task.getTaskId());

@@ -4,26 +4,26 @@ import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.enums.DeletedStatusEnum;
 import com.springleaf.gotodo.enums.ItemTypeEnum;
 import com.springleaf.gotodo.mapper.*;
+import com.springleaf.gotodo.model.entity.Category;
 import com.springleaf.gotodo.model.entity.DisplayItem;
 import com.springleaf.gotodo.model.entity.Group;
 import com.springleaf.gotodo.model.entity.GroupCategory;
+import com.springleaf.gotodo.model.vo.CategoryVO;
 import com.springleaf.gotodo.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class GroupServiceImpl implements GroupService {
-    
+
     private final GroupMapper groupMapper;
     private final CategoryMapper categoryMapper;
     private final GroupCategoryMapper groupCategoryMapper;
@@ -149,5 +149,44 @@ public class GroupServiceImpl implements GroupService {
 
         log.info("任务排序成功, 共更新{}条记录", updateList.size());
         return Result.success();
+    }
+
+    @Override
+    public Result<List<CategoryVO>> listCategoryByGroup(Long groupId) {
+        if (groupId == null) {
+            return Result.error("任务组ID不能为空");
+        }
+        if (groupMapper.getGroupByGroupId(groupId) == null) {
+            return Result.error("任务组不存在");
+        }
+        List<GroupCategory> groupCategories = groupCategoryMapper.getGroupCategoriesByGroupId(groupId);
+        if (groupCategories == null || groupCategories.isEmpty()) {
+            return Result.success(Collections.emptyList());
+        }
+        // 提取所有的分类ID
+        Set<Long> categoryIds = groupCategories.stream()
+                .map(GroupCategory::getCategoryId)
+                .collect(Collectors.toSet());
+        List<Category> categoryList = categoryMapper.getCategoriesByIds(categoryIds);
+        // 将分类信息转换为Map，便于快速查找
+        Map<Long, Category> categoryMap = categoryList.stream()
+                .collect(Collectors.toMap(Category::getCategoryId, Function.identity(), (existing, replacement) -> existing));
+        // 构建返回的CategoryVO列表
+        List<CategoryVO> categoryVOList = groupCategories.stream()
+                .map(groupCategory -> {
+                    Category category = categoryMap.get(groupCategory.getCategoryId());
+                    if (category == null) {
+                        // 如果分类信息缺失，可以选择跳过或设置默认值
+                        return null;
+                    }
+                    CategoryVO categoryVO = new CategoryVO();
+                    categoryVO.setCategoryId(category.getCategoryId());
+                    categoryVO.setCategoryName(category.getCategoryName());
+                    categoryVO.setSortOrder(groupCategory.getSortOrder());
+                    return categoryVO;
+                })
+                .filter(Objects::nonNull) // 过滤掉可能的null值
+                .collect(Collectors.toList());
+        return Result.success(categoryVOList);
     }
 }

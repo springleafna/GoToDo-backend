@@ -31,7 +31,7 @@ public interface GroupCategoryMapper {
     /**
      * 根据分类ID删除关联关系
      */
-    void deleteGroupCategoryByCategoryId(Long categoryId);
+    int deleteGroupCategoryByCategoryId(Long categoryId);
 
     /**
      * 根据任务组ID和分类ID列表查找关联关系
@@ -47,4 +47,9 @@ public interface GroupCategoryMapper {
      * 获取任务组中最大的排序值
      */
     int getMaxSortOrderByGroupId(Long groupId);
+
+    /**
+     * 根据任务组ID获取所有任务分类
+     */
+    List<GroupCategory> getGroupCategoriesByGroupId(Long groupId);
 }

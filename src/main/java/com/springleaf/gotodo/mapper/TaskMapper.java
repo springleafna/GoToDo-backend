@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface TaskMapper {
@@ -37,4 +38,9 @@ public interface TaskMapper {
      * 根据任务ID获取任务
      */
     Task getTaskByTaskId(Long taskId);
+
+    /**
+     * 根据任务ID集合批量获取任务
+     */
+    List<Task> getTaskByTaskIds(Set<Long> taskIds);
 }

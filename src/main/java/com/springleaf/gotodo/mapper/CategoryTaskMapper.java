@@ -42,4 +42,9 @@ public interface CategoryTaskMapper {
      * 获取分类的最大排序值
      */
     int getMaxSortOrderByCategoryId(Long categoryId);
+
+    /**
+     * 获取分类下的所有任务分类关系
+     */
+    List<CategoryTask> getCategoryTaskListByCategoryId(Long categoryId);
 }
