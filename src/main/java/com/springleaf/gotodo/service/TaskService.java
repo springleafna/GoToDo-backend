@@ -43,4 +43,9 @@ public interface TaskService {
      * @return Result<TaskVO>
      */
     Result<Void> updateTaskInfo(TaskUpdateDTO taskUpdateDTO);
+
+    /**
+     * 执行定时任务（任务提醒）
+     */
+    void checkAndSendReminders();
 }

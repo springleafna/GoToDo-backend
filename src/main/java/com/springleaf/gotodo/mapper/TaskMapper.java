@@ -4,6 +4,7 @@ import com.springleaf.gotodo.model.entity.Task;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -43,4 +44,9 @@ public interface TaskMapper {
      * 根据任务ID集合批量获取任务
      */
     List<Task> getTaskByTaskIds(Set<Long> taskIds);
+
+    /**
+     * 获取任务提醒到期的任务
+     */
+    List<Task> findByReminderTimeBeforeAndReminderSentFalse(LocalDateTime now);
 }

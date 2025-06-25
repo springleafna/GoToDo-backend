@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -164,6 +165,20 @@ public class TaskServiceImpl implements TaskService {
             return Result.error("更新任务信息失败");
         }
         return Result.success();
+    }
+
+    @Override
+    public void checkAndSendReminders() {
+        // TODO:任务提醒功能待实现
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+        log.info("检查并发送任务提醒，当前时间{}", now);
+        List<Task> remindTask = taskMapper.findByReminderTimeBeforeAndReminderSentFalse(now);
+        if (remindTask == null || remindTask.isEmpty()) {
+            return;
+        }
+        for (Task task : remindTask) {
+            log.info("发送任务提醒通知：{}", task);
+        }
     }
 
     /**

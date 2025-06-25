@@ -59,5 +59,9 @@
         </foreach>
         AND deleted = 0
     </select>
+    <select id="findByReminderTimeBeforeAndReminderSentFalse"
+            resultMap="resultMap">
+        SELECT * FROM tb_task WHERE reminder_time &lt;= #{now} AND deleted = 0
+    </select>
 
 </mapper>
