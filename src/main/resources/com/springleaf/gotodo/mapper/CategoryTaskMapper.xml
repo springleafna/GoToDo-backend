@@ -9,7 +9,7 @@
     </resultMap>
 
     <insert id="saveCategoryTask">
-        INSERT INTO tb_category_task (category_id, task_id) VALUES (#{categoryId}, #{taskId})
+        INSERT INTO tb_category_task (category_id, task_id, sort_order) VALUES (#{categoryId}, #{taskId}, #{sortOrder})
     </insert>
 
     <update id="updateCategoryTaskSortOrder">
@@ -46,6 +46,11 @@
         <foreach item="taskId" collection="validTaskIds" open="(" separator="," close=")">
             #{taskId}
         </foreach>
+    </select>
+
+    <select id="getMaxSortOrderByCategoryId" resultType="java.lang.Integer">
+        SELECT COALESCE(MAX(sort_order), -1) FROM tb_category_task
+        WHERE category_id = #{categoryId}
     </select>
 
 </mapper>

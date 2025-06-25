@@ -4,7 +4,6 @@ import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.enums.DeletedStatusEnum;
 import com.springleaf.gotodo.enums.ItemTypeEnum;
 import com.springleaf.gotodo.mapper.*;
-import com.springleaf.gotodo.model.entity.CategoryTask;
 import com.springleaf.gotodo.model.entity.DisplayItem;
 import com.springleaf.gotodo.model.entity.Group;
 import com.springleaf.gotodo.model.entity.GroupCategory;
@@ -46,7 +45,15 @@ public class GroupServiceImpl implements GroupService {
             return Result.error("任务分组不存在");
         }
         // 迁移
-        // 1. 先判断该分类是否属于其他任务组，若属于则移除
+        // 需要判断展示项中是否存在该类，也就是说当前该类是否和组同级
+        DisplayItem displayItem = displayItemMapper.getDisplayItemByCategoryIdAndType(categoryId, ItemTypeEnum.CATEGORY.getCode());
+        if (displayItem != null) {
+            // 与任务组同级时需要先删除该展示项
+            if (displayItemMapper.deleteDisplayItemById(displayItem.getItemId()) == 0) {
+                return Result.error("删除展示项失败");
+            }
+        }
+        // 判断该分类是否属于其他任务组，若属于则移除
         GroupCategory groupCategory = groupCategoryMapper.getGroupCategoryByCategoryId(categoryId);
         if (groupCategory != null) {
             if (groupCategory.getCategoryId().equals(categoryId) && groupCategory.getGroupId().equals(groupId)) {
@@ -54,14 +61,16 @@ public class GroupServiceImpl implements GroupService {
             }
             groupCategoryMapper.deleteGroupCategoryByCategoryId(categoryId);
         }
-        // 2. 再添加至当前任务组
-        groupCategoryMapper.saveGroupCategory(groupId, categoryId, 0);
+        // 再添加至当前任务组
+        int sortOrder = groupCategoryMapper.getMaxSortOrderByGroupId(groupId);
+        groupCategoryMapper.saveGroupCategory(groupId, categoryId, sortOrder + 1);
         return Result.success();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Result<Void> saveGroup(String groupName) {
-        if (groupName == null || groupName.isEmpty()) {
+        if (groupName == null || groupName.isBlank()) {
             return Result.error("任务组名称不能为空");
         }
 
@@ -75,7 +84,7 @@ public class GroupServiceImpl implements GroupService {
         DisplayItem displayItem = new DisplayItem();
         displayItem.setItemType(ItemTypeEnum.GROUP.getCode());
         displayItem.setItemRefId(group.getGroupId());
-        displayItem.setSortOrder(0);
+        displayItem.setSortOrder(displayItemMapper.getMaxSortOrder() + 1);
         if (displayItemMapper.saveDisplayItem(displayItem) == 0) {
             return Result.error("保存展示项失败");
         }

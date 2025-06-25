@@ -42,4 +42,9 @@ public interface GroupCategoryMapper {
      * 批量更新任务组-任务分类排序
      */
     int batchUpdateGroupCategorySortOrder(List<GroupCategory> updateList);
+
+    /**
+     * 获取任务组中最大的排序值
+     */
+    int getMaxSortOrderByGroupId(Long groupId);
 }

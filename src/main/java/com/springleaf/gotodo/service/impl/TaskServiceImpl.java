@@ -11,17 +11,16 @@ import com.springleaf.gotodo.mapper.FavoriteMapper;
 import com.springleaf.gotodo.mapper.TaskMapper;
 import com.springleaf.gotodo.model.dto.TaskSaveDTO;
 import com.springleaf.gotodo.model.dto.TaskUpdateDTO;
+import com.springleaf.gotodo.model.entity.CategoryTask;
 import com.springleaf.gotodo.model.entity.Favorite;
 import com.springleaf.gotodo.model.entity.Task;
 import com.springleaf.gotodo.model.vo.TaskVO;
 import com.springleaf.gotodo.service.TaskService;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,8 +56,14 @@ public class TaskServiceImpl implements TaskService {
             return Result.error("保存任务失败");
         }
         // 保存任务-任务分类
-        if (categoryTaskMapper.saveCategoryTask(taskSaveDTO.getCategoryId(), task.getTaskId()) == 0) {
-            return Result.error("保存任务失败");
+        // 需要获取当前最大的sortOrder的值，+1则为新插入的任务分类的排序号
+        int sortOrder = categoryTaskMapper.getMaxSortOrderByCategoryId(taskSaveDTO.getCategoryId());
+        CategoryTask categoryTask = new CategoryTask();
+        categoryTask.setCategoryId(taskSaveDTO.getCategoryId());
+        categoryTask.setTaskId(task.getTaskId());
+        categoryTask.setSortOrder(sortOrder + 1);
+        if (categoryTaskMapper.saveCategoryTask(categoryTask) == 0) {
+            return Result.error("建立分类任务关系失败");
         }
         return Result.success();
     }

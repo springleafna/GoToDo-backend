@@ -1,7 +1,6 @@
 package com.springleaf.gotodo.mapper;
 
 import com.springleaf.gotodo.model.entity.CategoryTask;
-import com.springleaf.gotodo.model.entity.Task;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,7 +11,7 @@ public interface CategoryTaskMapper {
     /**
      * 保存任务和分类关联关系
      */
-    int saveCategoryTask(@Param("categoryId") Long categoryId, @Param("taskId") Long taskId);
+    int saveCategoryTask(CategoryTask categoryTask);
 
     /**
      * 删除任务和分类关联关系
@@ -38,4 +37,9 @@ public interface CategoryTaskMapper {
      * 批量更新任务分类排序
      */
     int batchUpdateCategoryTaskSortOrder(List<CategoryTask> updateCategoryTaskList);
+
+    /**
+     * 获取分类的最大排序值
+     */
+    int getMaxSortOrderByCategoryId(Long categoryId);
 }

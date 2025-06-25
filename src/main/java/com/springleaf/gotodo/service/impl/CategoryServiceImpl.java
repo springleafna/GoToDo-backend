@@ -58,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
         DisplayItem displayItem = new DisplayItem();
         displayItem.setItemType(ItemTypeEnum.CATEGORY.getCode());
         displayItem.setItemRefId(category.getCategoryId());
-        displayItem.setSortOrder(0);
+        displayItem.setSortOrder(displayItemMapper.getMaxSortOrder() + 1);
         if (displayItemMapper.saveDisplayItem(displayItem) == 0) {
             return Result.error("保存展示项失败");
         }
@@ -80,16 +80,20 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryMapper.getCategoryByCategoryId(categoryId) == null) {
             return Result.error("分类不存在");
         }
-        // 1. 检查是否已经存在关联
+        // 检查是否已经存在关联
         if (categoryTaskMapper.getCategoryTaskByTaskId(taskId, categoryId) != null) {
             return Result.success();
         }
-        // 2. 先删除原有的分类任务关系
+        // 删除原有的分类任务关系
         if (categoryTaskMapper.deleteTaskCategoryByTaskId(taskId) == 0) {
             return Result.error("删除分类任务关系失败");
         }
-        // 3. 再建立新的分类任务关系
-        if (categoryTaskMapper.saveCategoryTask(categoryId, taskId) == 0) {
+        // 建立新的分类任务关系
+        CategoryTask categoryTask = new CategoryTask();
+        categoryTask.setCategoryId(categoryId);
+        categoryTask.setTaskId(taskId);
+        categoryTask.setSortOrder(categoryTaskMapper.getMaxSortOrderByCategoryId(categoryId) + 1);
+        if (categoryTaskMapper.saveCategoryTask(categoryTask) == 0) {
             return Result.error("建立分类任务关系失败");
         }
         return Result.success();
