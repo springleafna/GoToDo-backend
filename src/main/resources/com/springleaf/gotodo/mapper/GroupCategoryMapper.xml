@@ -13,6 +13,20 @@
         VALUES (#{categoryId}, #{groupId}, #{sortOrder})
     </insert>
 
+    <update id="batchUpdateGroupCategorySortOrder">
+        UPDATE tb_group_category
+        SET sort_order = CASE
+        <foreach collection="updateList" item="item">
+            WHEN group_id = #{item.groupId} AND category_id = #{item.categoryId} THEN #{item.sortOrder}
+        </foreach>
+        END
+        WHERE (
+        <foreach collection="updateList" item="item" separator=" OR ">
+            group_id = #{item.groupId} AND category_id = #{item.categoryId}
+        </foreach>
+        )
+    </update>
+
     <delete id="deleteGroupCategory">
         DELETE FROM tb_group_category WHERE group_id = #{groupId} AND category_id =#{categoryId}
     </delete>
@@ -29,6 +43,16 @@
     <select id="getGroupCategoryByCategoryId"
             resultMap="resultMap">
         SELECT * FROM tb_group_category WHERE category_id =#{categoryId}
+    </select>
+
+    <select id="getGroupCategoriesByGroupIdAndCategoryIds"
+            resultMap="resultMap">
+        SELECT * FROM tb_group_category
+        WHERE group_id = #{groupId}
+        AND category_id in
+        <foreach collection="validCategoryIds" item="categoryId" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
     </select>
 
 

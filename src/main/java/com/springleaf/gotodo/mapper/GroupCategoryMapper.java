@@ -4,6 +4,8 @@ import com.springleaf.gotodo.model.entity.GroupCategory;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface GroupCategoryMapper {
     /**
@@ -30,4 +32,14 @@ public interface GroupCategoryMapper {
      * 根据分类ID删除关联关系
      */
     void deleteGroupCategoryByCategoryId(Long categoryId);
+
+    /**
+     * 根据任务组ID和分类ID列表查找关联关系
+     */
+    List<GroupCategory> getGroupCategoriesByGroupIdAndCategoryIds(@Param("groupId") Long groupId, @Param("validCategoryIds") List<Long> validCategoryIds);
+
+    /**
+     * 批量更新任务组-任务分类排序
+     */
+    int batchUpdateGroupCategorySortOrder(List<GroupCategory> updateList);
 }

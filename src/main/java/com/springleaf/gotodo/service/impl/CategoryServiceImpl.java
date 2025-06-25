@@ -13,6 +13,7 @@ import com.springleaf.gotodo.model.entity.DisplayItem;
 import com.springleaf.gotodo.model.vo.CategoryVO;
 import com.springleaf.gotodo.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryMapper categoryMapper;
@@ -94,21 +96,28 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class) // 添加事务管理，确保操作的原子性
+    @Transactional(rollbackFor = Exception.class)
     public Result<Void> sortTask(Long categoryId, List<Long> taskIds) {
+        log.info("开始排序任务, categoryId: {}, taskIds: {}", categoryId, taskIds);
         if (categoryId == null) {
             return Result.error("分类ID不能为空");
         }
         if (taskIds == null || taskIds.isEmpty()) {
             return Result.error("任务ID列表不能为空");
         }
+        if (categoryMapper.getCategoryByCategoryId(categoryId) == null) {
+            return Result.error("分类不存在");
+        }
 
         // 过滤无效的任务ID（如null或非正数）
         List<Long> validTaskIds = taskIds.stream()
                 .filter(Objects::nonNull)
                 .filter(id -> id > 0)
-                .collect(Collectors.toList());
+                .distinct()
+                .toList();
         if (validTaskIds.size() != taskIds.size()) {
+            log.error("任务ID列表包含无效或重复的ID, 原始数量: {}, 有效数量: {}",
+                    taskIds.size(), validTaskIds.size());
             return Result.error("任务ID列表包含无效的ID");
         }
 
@@ -142,6 +151,7 @@ public class CategoryServiceImpl implements CategoryService {
             return Result.error("部分任务的排序更新失败");
         }
 
+        log.info("任务排序成功, 共更新{}条记录", updateList.size());
         return Result.success();
     }
     private CategoryVO convertToCategoryVO(Category category) {

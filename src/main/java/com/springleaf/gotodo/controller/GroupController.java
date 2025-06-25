@@ -1,6 +1,8 @@
 package com.springleaf.gotodo.controller;
 
 import com.springleaf.gotodo.common.Result;
+import com.springleaf.gotodo.model.dto.CategorySortDTO;
+import com.springleaf.gotodo.model.dto.TaskSortDTO;
 import com.springleaf.gotodo.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +29,13 @@ public class GroupController {
     @PostMapping("/save")
     public Result<Void> saveGroup(@RequestParam String groupName) {
         return groupService.saveGroup(groupName);
+    }
+
+    /**
+     * 任务类排序
+     */
+    @PutMapping("/sort")
+    public Result<Void> sortTask(@RequestBody CategorySortDTO taskSortDTO) {
+        return groupService.sortCategory(taskSortDTO.getGroupId(), taskSortDTO.getCategoryIds());
     }
 }
