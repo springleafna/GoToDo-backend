@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springleaf.gotodo.mapper.MemoMapper">
+    <resultMap id="resultMap" type="com.springleaf.gotodo.model.entity.Memo">
+        <id property="memoId" column="memo_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="pinned" column="pinned"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <insert id="saveMemo" useGeneratedKeys="true" keyProperty="memoId">
+        INSERT INTO tb_memo (title, content, pinned, deleted)
+        VALUES (#{title}, #{content}, #{pinned}, #{deleted})
+    </insert>
+
+    <update id="deleteMemoById">
+        UPDATE tb_memo SET deleted = 1 WHERE memo_id = #{memoId}
+    </update>
+
+    <update id="updateMemo">
+        UPDATE tb_memo SET title = #{title} , content = #{content}, pinned = #{pinned}
+        WHERE memo_id = #{memoId} AND deleted = 0
+    </update>
+
+    <select id="getMemoList" resultMap="resultMap">
+        SELECT * FROM tb_memo
+        WHERE (title IS NOT NULL or content IS NOT NULL)
+        AND deleted = 0
+    </select>
+
+    <select id="getMemoByMemoId" resultMap="resultMap">
+        SELECT * FROM tb_memo
+        WHERE memo_id = #{memoId}
+        AND deleted = 0
+    </select>
+
+</mapper>
