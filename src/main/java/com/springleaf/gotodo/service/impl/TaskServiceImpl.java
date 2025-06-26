@@ -192,8 +192,7 @@ public class TaskServiceImpl implements TaskService {
         if (task == null) {
             return Result.error("该任务不存在");
         }
-        TaskVO taskVO = new TaskVO();
-        BeanUtils.copyProperties(task, taskVO);
+        TaskVO taskVO = convertToTaskVO(task, categoryTaskMapper.getSortOrderByTaskId(taskId));
         return Result.success(taskVO);
     }
 

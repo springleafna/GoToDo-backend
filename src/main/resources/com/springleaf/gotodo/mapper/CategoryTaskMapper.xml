@@ -59,4 +59,9 @@
         WHERE category_id = #{categoryId}
     </select>
 
+    <select id="getSortOrderByTaskId" resultType="java.lang.Integer">
+        SELECT sort_order FROM tb_category_task
+        WHERE task_id = #{taskId}
+    </select>
+
 </mapper>

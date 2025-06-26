@@ -47,4 +47,9 @@ public interface CategoryTaskMapper {
      * 获取分类下的所有任务分类关系
      */
     List<CategoryTask> getCategoryTaskListByCategoryId(Long categoryId);
+
+    /**
+     * 获取任务在分类中的排序值
+     */
+    Integer getSortOrderByTaskId(Long taskId);
 }
