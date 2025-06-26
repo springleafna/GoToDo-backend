@@ -33,6 +33,7 @@
         SELECT * FROM tb_memo
         WHERE (title IS NOT NULL or content IS NOT NULL)
         AND deleted = 0
+        ORDER BY pinned DESC, update_time DESC
     </select>
 
     <select id="getMemoByMemoId" resultMap="resultMap">

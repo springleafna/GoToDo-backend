@@ -66,7 +66,11 @@ public class MemoServiceImpl implements MemoService {
         updateMemo.setMemoId(memoUpdateDTO.getMemoId());
         updateMemo.setTitle(memoUpdateDTO.getTitle());
         updateMemo.setContent(memoUpdateDTO.getContent());
-        updateMemo.setPinned(memoUpdateDTO.getPinned());
+        if (memoUpdateDTO.getPinned() == null) {
+            updateMemo.setPinned(PinnedStatusEnum.UN_PINNED.getCode());
+        } else {
+            updateMemo.setPinned(memoUpdateDTO.getPinned());
+        }
         if (memoMapper.updateMemo(updateMemo) == 0) {
             return Result.error("更新便签失败");
         }

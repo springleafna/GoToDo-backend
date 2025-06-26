@@ -64,3 +64,14 @@ CREATE TABLE tb_display_item (
   sort_order INT DEFAULT 0 COMMENT '展示顺序',
   UNIQUE KEY uk_item_ref (item_type, item_ref_id)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='展示项排序表（用于组和平级任务类的统一排序）';
+
+-- 便签表
+CREATE TABLE tb_memo (
+  memo_id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '便签ID',
+  title VARCHAR(200) COMMENT '便签标题',
+  content TEXT COMMENT '便签内容',
+  pinned TINYINT DEFAULT 0 COMMENT '是否置顶(0:否 1:是)',
+  create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  deleted TINYINT DEFAULT 0 COMMENT '删除标记(0:正常 1:删除)'
+) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='便签表';
