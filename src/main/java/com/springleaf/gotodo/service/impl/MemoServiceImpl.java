@@ -9,6 +9,7 @@ import com.springleaf.gotodo.model.entity.Memo;
 import com.springleaf.gotodo.model.vo.MemoVO;
 import com.springleaf.gotodo.service.MemoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemoServiceImpl implements MemoService {
 
     private final MemoMapper memoMapper;
@@ -102,5 +104,11 @@ public class MemoServiceImpl implements MemoService {
         memoVO.setCreateTime(memo.getCreateTime());
         memoVO.setUpdateTime(memo.getUpdateTime());
         return Result.success(memoVO);
+    }
+
+    @Override
+    public void cleanEmptyMemo() {
+        int sum =  memoMapper.cleanEmptyMemo();
+        log.info("定时任务-删除的空便签数量：{}", sum);
     }
 }

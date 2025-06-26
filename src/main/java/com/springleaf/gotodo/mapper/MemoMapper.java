@@ -32,4 +32,10 @@ public interface MemoMapper {
      * 更新便签
      */
     int updateMemo(Memo updateMemo);
+
+    /**
+     * 删除空便签
+     * @return 删除的数量
+     */
+    int cleanEmptyMemo();
 }

@@ -1,7 +1,6 @@
 package com.springleaf.gotodo.controller;
 
 import com.springleaf.gotodo.common.Result;
-import com.springleaf.gotodo.model.dto.MemoSaveDTO;
 import com.springleaf.gotodo.model.dto.MemoUpdateDTO;
 import com.springleaf.gotodo.model.vo.MemoVO;
 import com.springleaf.gotodo.service.MemoService;

@@ -25,6 +25,10 @@
         WHERE memo_id = #{memoId} AND deleted = 0
     </update>
 
+    <delete id="cleanEmptyMemo">
+        DELETE FROM tb_memo WHERE title IS NULL AND content IS NULL
+    </delete>
+
     <select id="getMemoList" resultMap="resultMap">
         SELECT * FROM tb_memo
         WHERE (title IS NOT NULL or content IS NOT NULL)

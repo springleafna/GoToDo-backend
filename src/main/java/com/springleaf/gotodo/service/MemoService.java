@@ -39,4 +39,9 @@ public interface MemoService {
      * @return Result<MemoVO>
      */
     Result<MemoVO> getMemoDetail(Long memoId);
+
+    /**
+     * 清理空便签定时任务
+     */
+    void cleanEmptyMemo();
 }

@@ -171,6 +171,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void checkAndSendReminders() {
         // TODO:任务提醒功能待实现
+        // TODO:飞书通知
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
         log.info("检查并发送任务提醒，当前时间{}", now);
         List<Task> remindTask = taskMapper.findByReminderTimeBeforeAndReminderSentFalse(now);
@@ -184,7 +185,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Result<TaskVO> getTaskDetail(Long taskId) {
-        // TODO:获取任务详情功能未完善
         if (taskId == null) {
             return Result.error("任务ID不能为空");
         }
