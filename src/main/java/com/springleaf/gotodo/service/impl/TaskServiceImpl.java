@@ -19,11 +19,9 @@ import com.springleaf.gotodo.model.vo.TaskVO;
 import com.springleaf.gotodo.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +39,7 @@ public class TaskServiceImpl implements TaskService {
     private final CategoryMapper categoryMapper;
     private final CategoryTaskMapper categoryTaskMapper;
     private final FavoriteMapper favoriteMapper;
+    private final FeiShu feiShu;
     
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -171,9 +170,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void checkAndSendReminders() throws IOException {
-        // TODO:任务提醒功能待实现
-        // TODO:飞书通知
+    public void checkAndSendReminders() {
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
         log.info("检查并发送任务提醒，当前时间{}", now);
         List<Task> remindTask = taskMapper.findByReminderTimeBeforeAndReminderSentFalse(now);
@@ -181,15 +178,21 @@ public class TaskServiceImpl implements TaskService {
             log.info("没有需要发送的任务提醒");
             return;
         }
-        FeiShu feiShu = new FeiShu(System.getenv("FEISHU_WEBHOOK"));
         for (Task task : remindTask) {
-            String title = task.getTitle();
-            String categoryName = categoryMapper.getCategoryNameByTaskId(task.getTaskId());
-            String remark = task.getRemark();
-            String reminderTime = task.getReminderTime().toString();
-            String endTime = task.getEndTime().toString();
-            feiShu.sendTemplateMessage(title, categoryName, remark, reminderTime, endTime);
-            log.info("发送任务提醒通知：{}", task);
+            try {
+                String title = task.getTitle();
+                String categoryName = categoryMapper.getCategoryNameByTaskId(task.getTaskId());
+                String remark = task.getRemark() == null || task.getRemark().isEmpty() ? "无备注" : task.getRemark();
+                String reminderTime = task.getReminderTime().toString().replace("T", " ");
+                String endTime = task.getEndTime() != null ? task.getEndTime().toString().replace("T", " ") : "无截止时间";
+
+                feiShu.sendTemplateMessage(title, categoryName, remark, reminderTime, endTime);
+                // 更新任务提醒发送状态
+                taskMapper.updateTaskReminderSent(task.getTaskId());
+                log.info("成功发送飞书任务提醒通知：{}", task);
+            } catch (Exception e) {
+                log.error("发送任务提醒通知失败，任务ID：{}，错误信息：{}", task.getTaskId(), e.getMessage(), e);
+            }
         }
     }
 

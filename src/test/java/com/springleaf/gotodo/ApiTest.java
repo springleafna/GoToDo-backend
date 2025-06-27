@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -22,6 +23,8 @@ public class ApiTest {
     private FavoriteMapper favoriteMapper;
     @Resource
     private DisplayItemMapper displayItemMapper;
+    @Resource
+    private FeiShu feiShu;
 
     @Test
     public void Test() {
@@ -45,8 +48,13 @@ public class ApiTest {
     @Test
     public void getEnv() throws IOException {
         String key = System.getenv("FEISHU_WEBHOOK");
-        System.out.println("key: " + key);
-        FeiShu feiShu = new FeiShu(key);
+        System.out.println("key: " + key);;
         feiShu.sendTemplateMessage("title", "categoryName","remark", "2025-06-27 10:05","2025-06-27 12:00");
+    }
+    
+    @Test
+    public void timeToString() {
+        String string = LocalDateTime.now().toString();
+        System.out.println(string);
     }
 }

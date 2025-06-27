@@ -35,6 +35,13 @@
         AND deleted = 0
     </update>
 
+    <update id="updateTaskReminderSent">
+        UPDATE tb_task
+        SET reminder_time = NULL
+        WHERE task_id = #{taskId}
+        AND deleted = 0
+    </update>
+
     <delete id="deleteTaskByTaskId">
         UPDATE tb_task SET deleted = 1 WHERE task_id = #{taskId}
     </delete>

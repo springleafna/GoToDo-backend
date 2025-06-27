@@ -1,29 +1,32 @@
 package com.springleaf.gotodo.feishu;
 
-import com.alibaba.fastjson2.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Scanner;
+import java.util.stream.Collectors;
 
+@Component
+@Slf4j
 public class FeiShu {
-    private final Logger logger = LoggerFactory.getLogger(FeiShu.class);
+    private static final int CONNECT_TIMEOUT = 5000;
+    private static final int READ_TIMEOUT = 5000;
+    private static final int MAX_RETRIES = 3;
+    private static final String path = "FEISHU_WEBHOOK";
     private final String webhook;
 
-    public FeiShu(String webhook) {
-        if (webhook == null || webhook.trim().isEmpty()) {
-            throw new IllegalArgumentException("Webhook URL cannot be null or empty");
+    public FeiShu() {
+        this.webhook = Objects.requireNonNull(System.getenv(path), "Webhook URL cannot be null");
+        if (webhook.trim().isEmpty()) {
+            throw new IllegalArgumentException("Webhook URL cannot be empty");
         }
         if (!webhook.startsWith("https://")) {
-            throw new IllegalArgumentException("Invalid webhook URL format");
+            throw new IllegalArgumentException("Webhook URL must start with https://");
         }
-        this.webhook = webhook;
     }
 
     public void sendTemplateMessage(String title, String categoryName, String remark, String reminderTime, String endTime) throws IOException {
@@ -31,27 +34,51 @@ public class FeiShu {
         Objects.requireNonNull(categoryName, "CategoryName cannot be null");
         Objects.requireNonNull(reminderTime, "ReminderTime cannot be null");
 
-        URL url = new URL(webhook);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json; utf-8");
-        conn.setDoOutput(true);
+        int attempt = 0;
+        IOException lastException = null;
 
-        FeiShuTaskReminderCard message = new FeiShuTaskReminderCard(title, categoryName, remark, reminderTime, endTime);
+        while (attempt < MAX_RETRIES) {
+            attempt++;
+            try {
+                HttpURLConnection conn = (HttpURLConnection) new URL(webhook).openConnection();
+                conn.setConnectTimeout(CONNECT_TIMEOUT);
+                conn.setReadTimeout(READ_TIMEOUT);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+                conn.setDoOutput(true);
 
-        try (OutputStream os = conn.getOutputStream()) {
-            byte[] input = JSON.toJSONString(message).getBytes(StandardCharsets.UTF_8);
-            os.write(input, 0, input.length);
+                FeiShuTaskReminderCard message = new FeiShuTaskReminderCard(
+                        title, categoryName, remark, reminderTime, endTime);
+
+                try (OutputStream os = conn.getOutputStream()) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.writeValue(os, message);
+                }
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    throw new IOException("HTTP request failed with code: " + responseCode);
+                }
+
+                try (InputStream is = conn.getInputStream();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                    String response = reader.lines().collect(Collectors.joining());
+                    log.info("Message sent successfully. Response: {}", response);
+                }
+                return;
+            } catch (IOException e) {
+                lastException = e;
+                log.warn("Attempt {} failed: {}", attempt, e.getMessage());
+                if (attempt < MAX_RETRIES) {
+                    try {
+                        Thread.sleep(1000L * attempt);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new IOException("Interrupted during retry", ie);
+                    }
+                }
+            }
         }
-
-        int responseCode = conn.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new IOException("Failed to send FeiShu message. Response code: " + responseCode);
-        }
-
-        try (Scanner scanner = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8)) {
-            String response = scanner.useDelimiter("\\A").next();
-            logger.info("FeiShu message sent successfully. Response: {}", response);
-        }
+        throw lastException;
     }
 }

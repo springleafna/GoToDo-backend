@@ -49,4 +49,9 @@ public interface TaskMapper {
      * 获取任务提醒到期的任务
      */
     List<Task> findByReminderTimeBeforeAndReminderSentFalse(LocalDateTime now);
+
+    /**
+     * 根据任务ID将任务的提醒时间设置为空
+     */
+    void updateTaskReminderSent(Long taskId);
 }
