@@ -29,4 +29,11 @@
         </foreach>
         AND deleted = 0
     </select>
+
+    <select id="getCategoryNameByTaskId" resultType="java.lang.String">
+        SELECT category_name FROM tb_category c
+        WHERE c.category_id = (
+        SELECT category_id FROM tb_category_task ct
+        WHERE ct.task_id = #{taskId} )
+    </select>
 </mapper>

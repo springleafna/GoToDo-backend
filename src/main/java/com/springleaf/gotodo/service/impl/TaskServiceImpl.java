@@ -5,6 +5,7 @@ import com.springleaf.gotodo.enums.CompletedStatusEnum;
 import com.springleaf.gotodo.enums.DeletedStatusEnum;
 import com.springleaf.gotodo.enums.FavoriteStatusEnum;
 import com.springleaf.gotodo.enums.PriorityEnum;
+import com.springleaf.gotodo.feishu.FeiShu;
 import com.springleaf.gotodo.mapper.CategoryMapper;
 import com.springleaf.gotodo.mapper.CategoryTaskMapper;
 import com.springleaf.gotodo.mapper.FavoriteMapper;
@@ -22,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -169,16 +171,24 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void checkAndSendReminders() {
+    public void checkAndSendReminders() throws IOException {
         // TODO:任务提醒功能待实现
         // TODO:飞书通知
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
         log.info("检查并发送任务提醒，当前时间{}", now);
         List<Task> remindTask = taskMapper.findByReminderTimeBeforeAndReminderSentFalse(now);
         if (remindTask == null || remindTask.isEmpty()) {
+            log.info("没有需要发送的任务提醒");
             return;
         }
+        FeiShu feiShu = new FeiShu(System.getenv("FEISHU_WEBHOOK"));
         for (Task task : remindTask) {
+            String title = task.getTitle();
+            String categoryName = categoryMapper.getCategoryNameByTaskId(task.getTaskId());
+            String remark = task.getRemark();
+            String reminderTime = task.getReminderTime().toString();
+            String endTime = task.getEndTime().toString();
+            feiShu.sendTemplateMessage(title, categoryName, remark, reminderTime, endTime);
             log.info("发送任务提醒通知：{}", task);
         }
     }

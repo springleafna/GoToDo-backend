@@ -27,4 +27,9 @@ public interface CategoryMapper {
      * 通过分类ID列表查找分类
      */
     List<Category> getCategoriesByIds(Set<Long> categoryIds);
+
+    /**
+     * 根据任务ID获取分类名称
+     */
+    String getCategoryNameByTaskId(Long taskId);
 }

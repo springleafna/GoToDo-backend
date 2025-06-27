@@ -5,6 +5,7 @@ import com.springleaf.gotodo.model.dto.TaskSaveDTO;
 import com.springleaf.gotodo.model.dto.TaskUpdateDTO;
 import com.springleaf.gotodo.model.vo.TaskVO;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface TaskService {
@@ -47,7 +48,7 @@ public interface TaskService {
     /**
      * 执行定时任务（任务提醒）
      */
-    void checkAndSendReminders();
+    void checkAndSendReminders() throws IOException;
 
     /**
      * 获取任务详细信息
