@@ -2,6 +2,7 @@ package com.springleaf.gotodo.mapper;
 
 import com.springleaf.gotodo.model.entity.Memo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -38,4 +39,9 @@ public interface MemoMapper {
      * @return 删除的数量
      */
     int cleanEmptyMemo();
+
+    /**
+     * 更新便签是否置顶
+     */
+    int updatePinnedMemo(@Param("memoId") Long memoId, @Param("pinned") Integer pinned);
 }

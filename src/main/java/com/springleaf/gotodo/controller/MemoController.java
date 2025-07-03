@@ -3,6 +3,7 @@ package com.springleaf.gotodo.controller;
 import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.model.dto.MemoSaveDTO;
 import com.springleaf.gotodo.model.dto.MemoUpdateDTO;
+import com.springleaf.gotodo.model.dto.MemoUpdatePinnedDTO;
 import com.springleaf.gotodo.model.vo.MemoVO;
 import com.springleaf.gotodo.service.MemoService;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,14 @@ public class MemoController {
     @PutMapping("/update")
     public Result<Void> updateMemo(@RequestBody MemoUpdateDTO memoUpdateDTO) {
         return memoService.updateMemo(memoUpdateDTO);
+    }
+
+    /**
+     * 置顶/取消置顶便签
+     */
+    @PutMapping("/updatePinned")
+    public Result<Void> updatePinned(@RequestBody MemoUpdatePinnedDTO memoUpdatePinnedDTO) {
+        return memoService.updatePinnedMemo(memoUpdatePinnedDTO);
     }
 
     /**

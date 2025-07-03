@@ -3,6 +3,7 @@ package com.springleaf.gotodo.service;
 import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.model.dto.MemoSaveDTO;
 import com.springleaf.gotodo.model.dto.MemoUpdateDTO;
+import com.springleaf.gotodo.model.dto.MemoUpdatePinnedDTO;
 import com.springleaf.gotodo.model.vo.MemoVO;
 
 import java.util.List;
@@ -52,4 +53,11 @@ public interface MemoService {
      * @return Result<Void>
      */
     Result<Void> addMemo(MemoSaveDTO memoSaveDTO);
+
+    /**
+     * 置顶/取消置顶便签
+     * @param memoUpdatePinnedDTO 待更新的便签信息
+     * @return Result<Void>
+     */
+    Result<Void> updatePinnedMemo(MemoUpdatePinnedDTO memoUpdatePinnedDTO);
 }

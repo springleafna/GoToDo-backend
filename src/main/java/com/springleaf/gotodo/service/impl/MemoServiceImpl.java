@@ -6,6 +6,7 @@ import com.springleaf.gotodo.enums.PinnedStatusEnum;
 import com.springleaf.gotodo.mapper.MemoMapper;
 import com.springleaf.gotodo.model.dto.MemoSaveDTO;
 import com.springleaf.gotodo.model.dto.MemoUpdateDTO;
+import com.springleaf.gotodo.model.dto.MemoUpdatePinnedDTO;
 import com.springleaf.gotodo.model.entity.Memo;
 import com.springleaf.gotodo.model.vo.MemoVO;
 import com.springleaf.gotodo.service.MemoService;
@@ -128,6 +129,24 @@ public class MemoServiceImpl implements MemoService {
         memo.setPinned(PinnedStatusEnum.UN_PINNED.getCode());
         memo.setDeleted(DeletedStatusEnum.NORMAL.getCode());
         memoMapper.saveMemo(memo);
+        return Result.success();
+    }
+
+    @Override
+    public Result<Void> updatePinnedMemo(MemoUpdatePinnedDTO memoUpdatePinnedDTO) {
+        if (memoUpdatePinnedDTO == null) {
+            return Result.error("置顶/取消置顶 参数不能为空");
+        }
+        if (memoUpdatePinnedDTO.getMemoId() == null) {
+            return Result.error("便签ID不能为空");
+        }
+        if (memoUpdatePinnedDTO.getPinned() == null) {
+            return Result.error("是否置顶不能为空");
+        }
+        Integer pinned = memoUpdatePinnedDTO.getPinned() ? 1 : 0;
+        if (memoMapper.updatePinnedMemo(memoUpdatePinnedDTO.getMemoId(), pinned) == 0) {
+            return Result.error("更新置顶状态失败");
+        }
         return Result.success();
     }
 }

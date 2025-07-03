@@ -25,6 +25,11 @@
         WHERE memo_id = #{memoId} AND deleted = 0
     </update>
 
+    <update id="updatePinnedMemo">
+        UPDATE tb_memo SET pinned = #{pinned}
+        WHERE memo_id = #{memoId} AND deleted = 0
+    </update>
+
     <delete id="cleanEmptyMemo">
         DELETE FROM tb_memo WHERE title IS NULL AND content IS NULL
     </delete>
