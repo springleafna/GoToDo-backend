@@ -1,6 +1,7 @@
 package com.springleaf.gotodo.controller;
 
 import com.springleaf.gotodo.common.Result;
+import com.springleaf.gotodo.model.dto.MemoSaveDTO;
 import com.springleaf.gotodo.model.dto.MemoUpdateDTO;
 import com.springleaf.gotodo.model.vo.MemoVO;
 import com.springleaf.gotodo.service.MemoService;
@@ -22,6 +23,14 @@ public class MemoController {
     @PostMapping("/save")
     public Result<Long> saveMemo() {
         return memoService.saveMemo();
+    }
+
+    /**
+     * 当用户离开界面且内容不为空时触发便签内容同步到数据库
+     */
+    @PostMapping("add")
+    public Result<Void> addMemo(@RequestBody MemoSaveDTO memoSaveDTO) {
+        return memoService.addMemo(memoSaveDTO);
     }
 
     /**

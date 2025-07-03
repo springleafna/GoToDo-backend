@@ -16,11 +16,11 @@ public class FeiShu {
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int READ_TIMEOUT = 5000;
     private static final int MAX_RETRIES = 3;
-    private static final String path = "FEISHU_WEBHOOK";
+    private static final String PATH = "FEISHU_WEBHOOK";
     private final String webhook;
 
     public FeiShu() {
-        this.webhook = Objects.requireNonNull(System.getenv(path), "Webhook URL cannot be null");
+        this.webhook = Objects.requireNonNull(System.getenv(PATH), "Webhook URL cannot be null");
         if (webhook.trim().isEmpty()) {
             throw new IllegalArgumentException("Webhook URL cannot be empty");
         }

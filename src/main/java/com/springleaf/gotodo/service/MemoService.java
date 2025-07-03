@@ -1,6 +1,7 @@
 package com.springleaf.gotodo.service;
 
 import com.springleaf.gotodo.common.Result;
+import com.springleaf.gotodo.model.dto.MemoSaveDTO;
 import com.springleaf.gotodo.model.dto.MemoUpdateDTO;
 import com.springleaf.gotodo.model.vo.MemoVO;
 
@@ -44,4 +45,11 @@ public interface MemoService {
      * 清理空便签定时任务
      */
     void cleanEmptyMemo();
+
+    /**
+     * 当用户离开界面且内容不为空时触发便签内容同步到数据库
+     * @param memoSaveDTO 待保存的便签信息
+     * @return Result<Void>
+     */
+    Result<Void> addMemo(MemoSaveDTO memoSaveDTO);
 }

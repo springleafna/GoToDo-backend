@@ -4,6 +4,7 @@ import com.springleaf.gotodo.common.Result;
 import com.springleaf.gotodo.enums.DeletedStatusEnum;
 import com.springleaf.gotodo.enums.PinnedStatusEnum;
 import com.springleaf.gotodo.mapper.MemoMapper;
+import com.springleaf.gotodo.model.dto.MemoSaveDTO;
 import com.springleaf.gotodo.model.dto.MemoUpdateDTO;
 import com.springleaf.gotodo.model.entity.Memo;
 import com.springleaf.gotodo.model.vo.MemoVO;
@@ -114,5 +115,19 @@ public class MemoServiceImpl implements MemoService {
     public void cleanEmptyMemo() {
         int sum =  memoMapper.cleanEmptyMemo();
         log.info("定时任务-删除的空便签数量：{}", sum);
+    }
+
+    @Override
+    public Result<Void> addMemo(MemoSaveDTO memoSaveDTO) {
+        if (memoSaveDTO.getContent().isEmpty() && memoSaveDTO.getTitle().isEmpty()) {
+            return Result.success();
+        }
+        Memo memo = new Memo();
+        memo.setContent(memoSaveDTO.getContent().isEmpty() ? null : memoSaveDTO.getContent());
+        memo.setTitle(memoSaveDTO.getTitle().isEmpty() ? null : memoSaveDTO.getTitle());
+        memo.setPinned(PinnedStatusEnum.UN_PINNED.getCode());
+        memo.setDeleted(DeletedStatusEnum.NORMAL.getCode());
+        memoMapper.saveMemo(memo);
+        return Result.success();
     }
 }
