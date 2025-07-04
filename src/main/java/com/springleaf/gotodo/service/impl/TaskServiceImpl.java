@@ -106,6 +106,7 @@ public class TaskServiceImpl implements TaskService {
         return Result.success(taskVOList);
     }
 
+    @Transactional
     @Override
     public Result<Void> deleteTask(Long taskId) {
         if (taskId == null) {
@@ -117,6 +118,7 @@ public class TaskServiceImpl implements TaskService {
         if (taskMapper.deleteTaskByTaskId(taskId) == 0) {
             return Result.error("删除任务失败");
         }
+        categoryTaskMapper.deleteTaskCategoryByTaskId(taskId);
         return Result.success();
     }
 
